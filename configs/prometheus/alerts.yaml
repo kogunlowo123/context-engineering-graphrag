@@ -1,0 +1,100 @@
+# PrometheusRule-compatible alert rules. Load with the Prometheus Operator
+# (wrap in a PrometheusRule) or a rule_files entry.
+# SLOs (docs/architecture/agent-specification.md):
+#   availability   99.9% of retrieval, context and query requests succeed (non-5xx)
+#   latency        p95 /search < 500 ms, p95 /context < 1 s, p95 /query < 3 s
+#   groundedness   released answers keep median groundedness >= 0.8
+groups:
+  - name: context-engineering-graphrag.slo
+    rules:
+      - record: graphrag:request_errors:ratio_5m
+        expr: |
+          sum(rate(graphrag_http_request_duration_seconds_count{status=~"5.."}[5m]))
+          /
+          clamp_min(sum(rate(graphrag_http_request_duration_seconds_count[5m])), 1e-9)
+
+      - record: graphrag:request_errors:ratio_1h
+        expr: |
+          sum(rate(graphrag_http_request_duration_seconds_count{status=~"5.."}[1h]))
+          /
+          clamp_min(sum(rate(graphrag_http_request_duration_seconds_count[1h])), 1e-9)
+
+      - alert: GraphRAGErrorBudgetBurnFast
+        expr: graphrag:request_errors:ratio_5m > (14.4 * 0.001) and graphrag:request_errors:ratio_1h > (14.4 * 0.001)
+        for: 2m
+        labels: {severity: page}
+        annotations:
+          summary: Context platform burning its 30-day error budget 14x faster than sustainable
+          runbook: docs/runbooks/incident-response.md#elevated-5xx
+
+      - alert: GraphRAGSearchLatencyHigh
+        expr: |
+          histogram_quantile(0.95, sum by (le) (
+            rate(graphrag_http_request_duration_seconds_bucket{route="/v1/collections/{collection}/search"}[5m])
+          )) > 0.5
+        for: 10m
+        labels: {severity: ticket}
+        annotations:
+          summary: p95 search latency above 500 ms
+          runbook: docs/runbooks/monitoring.md#latency
+
+      - alert: GraphRAGQueryLatencyHigh
+        expr: |
+          histogram_quantile(0.95, sum by (le) (
+            rate(graphrag_http_request_duration_seconds_bucket{route="/v1/collections/{collection}/query"}[5m])
+          )) > 3
+        for: 10m
+        labels: {severity: ticket}
+        annotations:
+          summary: p95 query latency above 3 s
+          runbook: docs/runbooks/monitoring.md#latency
+
+  - name: context-engineering-graphrag.quality
+    rules:
+      - alert: GraphRAGGroundednessDegraded
+        expr: |
+          histogram_quantile(0.5, sum by (le) (rate(graphrag_answer_groundedness_bucket[30m]))) < 0.8
+        for: 30m
+        labels: {severity: ticket}
+        annotations:
+          summary: Median answer groundedness below 0.8 over 30 minutes
+          runbook: docs/runbooks/monitoring.md#groundedness
+
+      - alert: GraphRAGWithheldAnswerSpike
+        expr: |
+          sum(rate(graphrag_answers_total{disposition=~"withheld|pending_approval"}[15m]))
+          /
+          clamp_min(sum(rate(graphrag_answers_total[15m])), 1e-9) > 0.25
+        for: 15m
+        labels: {severity: ticket}
+        annotations:
+          summary: More than 25% of answers are withheld or waiting for approval
+          runbook: docs/runbooks/monitoring.md#groundedness
+
+  - name: context-engineering-graphrag.security
+    rules:
+      - alert: GraphRAGQuarantineSpike
+        expr: sum by (collection) (increase(graphrag_quarantined_chunks_total[1h])) > 20
+        labels: {severity: page}
+        annotations:
+          summary: Many ingested chunks quarantined for prompt injection; possible corpus poisoning
+          runbook: docs/runbooks/incident-response.md#corpus-poisoning
+
+      - alert: GraphRAGDenySpike
+        expr: |
+          sum(rate(graphrag_authorization_decisions_total{decision="deny"}[10m]))
+          /
+          clamp_min(sum(rate(graphrag_authorization_decisions_total[10m])), 1e-9) > 0.2
+        for: 15m
+        labels: {severity: ticket}
+        annotations:
+          summary: More than 20% of authorization decisions are denials
+          runbook: docs/runbooks/incident-response.md#deny-spike
+
+      - alert: GraphRAGNotReady
+        expr: sum(up{job="context-engineering-graphrag"}) < 2
+        for: 5m
+        labels: {severity: page}
+        annotations:
+          summary: Fewer than two platform replicas are being scraped
+          runbook: docs/runbooks/incident-response.md#replicas-down

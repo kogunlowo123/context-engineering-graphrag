@@ -1,0 +1,86 @@
+{
+  "$defs": {
+    "QueryMetrics": {
+      "properties": {
+        "ndcg": {
+          "title": "Ndcg",
+          "type": "number"
+        },
+        "precision": {
+          "title": "Precision",
+          "type": "number"
+        },
+        "query": {
+          "title": "Query",
+          "type": "string"
+        },
+        "recall": {
+          "title": "Recall",
+          "type": "number"
+        },
+        "reciprocal_rank": {
+          "title": "Reciprocal Rank",
+          "type": "number"
+        },
+        "retrieved_documents": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Retrieved Documents",
+          "type": "array"
+        }
+      },
+      "required": [
+        "query",
+        "retrieved_documents",
+        "recall",
+        "precision",
+        "reciprocal_rank",
+        "ndcg"
+      ],
+      "title": "QueryMetrics",
+      "type": "object"
+    }
+  },
+  "$id": "https://github.com/kogunlowo123/context-engineering-graphrag/schemas/retrieval-evaluation.response.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "k": {
+      "title": "K",
+      "type": "integer"
+    },
+    "mean_ndcg": {
+      "title": "Mean Ndcg",
+      "type": "number"
+    },
+    "mean_precision": {
+      "title": "Mean Precision",
+      "type": "number"
+    },
+    "mean_recall": {
+      "title": "Mean Recall",
+      "type": "number"
+    },
+    "mrr": {
+      "title": "Mrr",
+      "type": "number"
+    },
+    "queries": {
+      "items": {
+        "$ref": "#/$defs/QueryMetrics"
+      },
+      "title": "Queries",
+      "type": "array"
+    }
+  },
+  "required": [
+    "k",
+    "queries",
+    "mean_recall",
+    "mean_precision",
+    "mrr",
+    "mean_ndcg"
+  ],
+  "title": "RetrievalReport",
+  "type": "object"
+}

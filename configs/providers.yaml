@@ -1,0 +1,73 @@
+# Foundation model providers for model-backed features (GRAPHRAG_GENERATOR=model,
+# GRAPHRAG_EXTRACTOR=model, GRAPHRAG_SUMMARIZER=model, GRAPHRAG_JUDGE=model).
+# Loaded with agentic-core ProvidersConfig.from_file when GRAPHRAG_PROVIDERS_FILE
+# points here.
+#
+# ${NAME} values are resolved from the environment at load time and loading
+# fails if any is unset. Credentials are referenced by variable name only;
+# Bedrock uses the AWS default credential chain (IRSA / EKS Pod Identity).
+# Required variables are listed in docs/operations/configuration.md.
+#
+# Tasks used by this service: answer, extract, summarize, classify (judge).
+# max_classification: 0=PUBLIC 1=INTERNAL 2=CONFIDENTIAL 3=RESTRICTED.
+# Grant 3 only where a BAA/DPA and data residency approval are in place.
+providers:
+  - kind: bedrock
+    profile:
+      name: bedrock-claude
+      model: ${BEDROCK_CLAUDE_MODEL_ID}
+      region: ${AWS_REGION}
+      max_classification: 3
+      input_cost_per_mtok: ${BEDROCK_CLAUDE_INPUT_USD_PER_MTOK}
+      output_cost_per_mtok: ${BEDROCK_CLAUDE_OUTPUT_USD_PER_MTOK}
+      max_context_tokens: 200000
+      tasks: [general]
+
+  - kind: bedrock
+    profile:
+      name: nova
+      model: amazon.nova-pro-v1:0
+      region: ${AWS_REGION}
+      max_classification: 3
+      input_cost_per_mtok: ${NOVA_INPUT_USD_PER_MTOK}
+      output_cost_per_mtok: ${NOVA_OUTPUT_USD_PER_MTOK}
+      max_context_tokens: 300000
+      tasks: [summarize, extract, classify]
+
+  - kind: openai_compatible
+    base_url: ${AZURE_OPENAI_ENDPOINT}
+    path: /openai/deployments/${AZURE_OPENAI_DEPLOYMENT}/chat/completions
+    query: {api-version: "2024-10-21"}
+    auth: api-key
+    api_key_env: AZURE_OPENAI_API_KEY
+    send_model: false
+    max_tokens_field: max_completion_tokens
+    profile:
+      name: azure-gpt
+      model: ${AZURE_OPENAI_DEPLOYMENT}
+      region: ${AZURE_OPENAI_REGION}
+      max_classification: 2
+      input_cost_per_mtok: ${AZURE_GPT_INPUT_USD_PER_MTOK}
+      output_cost_per_mtok: ${AZURE_GPT_OUTPUT_USD_PER_MTOK}
+      tasks: [general]
+
+  - kind: gemini
+    access_token_env: GCP_ACCESS_TOKEN
+    base_url: https://${GCP_REGION}-aiplatform.googleapis.com/v1/projects/${GCP_PROJECT_ID}/locations/${GCP_REGION}/publishers/google
+    profile:
+      name: gemini
+      model: gemini-2.5-pro
+      region: ${GCP_REGION}
+      max_classification: 2
+      input_cost_per_mtok: ${GEMINI_INPUT_USD_PER_MTOK}
+      output_cost_per_mtok: ${GEMINI_OUTPUT_USD_PER_MTOK}
+      tasks: [general]
+
+  - kind: openai_compatible
+    base_url: http://vllm.inference.svc.cluster.local:8000
+    auth: none
+    profile:
+      name: llama-selfhosted
+      model: meta-llama/Llama-3.3-70B-Instruct
+      max_classification: 3
+      tasks: [general]

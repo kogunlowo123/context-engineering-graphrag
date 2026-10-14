@@ -1,0 +1,21 @@
+# Values used by CI to render and schema-validate the chart (helm lint,
+# helm template | kubeconform). They describe a complete, valid deployment.
+graphrag:
+  publicUrl: https://rag.agents.ci.internal
+  identityFabricUrl: http://agent-identity-fabric.agent-identity.svc
+  embedding:
+    awsRegion: us-east-1
+  reranker:
+    kind: http
+    url: http://reranker.inference.svc:8080
+  generator: model
+  summarizer: model
+secrets:
+  auditKeyFile: audit-2026-10.pem
+  providerEnv: context-engineering-graphrag-providers
+ingress:
+  enabled: true
+  className: nginx
+  host: rag.agents.ci.internal
+serviceMonitor:
+  enabled: true

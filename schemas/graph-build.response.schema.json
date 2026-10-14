@@ -1,0 +1,78 @@
+{
+  "$defs": {
+    "LevelReport": {
+      "properties": {
+        "communities": {
+          "title": "Communities",
+          "type": "integer"
+        },
+        "level": {
+          "title": "Level",
+          "type": "integer"
+        },
+        "modularity": {
+          "title": "Modularity",
+          "type": "number"
+        }
+      },
+      "required": [
+        "level",
+        "communities",
+        "modularity"
+      ],
+      "title": "LevelReport",
+      "type": "object"
+    }
+  },
+  "$id": "https://github.com/kogunlowo123/context-engineering-graphrag/schemas/graph-build.response.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "collection": {
+      "title": "Collection",
+      "type": "string"
+    },
+    "communities": {
+      "title": "Communities",
+      "type": "integer"
+    },
+    "duration_ms": {
+      "title": "Duration Ms",
+      "type": "number"
+    },
+    "entities": {
+      "title": "Entities",
+      "type": "integer"
+    },
+    "levels": {
+      "items": {
+        "$ref": "#/$defs/LevelReport"
+      },
+      "title": "Levels",
+      "type": "array"
+    },
+    "merged_entities": {
+      "title": "Merged Entities",
+      "type": "integer"
+    },
+    "relations": {
+      "title": "Relations",
+      "type": "integer"
+    },
+    "summarizer": {
+      "title": "Summarizer",
+      "type": "string"
+    }
+  },
+  "required": [
+    "collection",
+    "merged_entities",
+    "entities",
+    "relations",
+    "levels",
+    "communities",
+    "summarizer",
+    "duration_ms"
+  ],
+  "title": "GraphBuildReport",
+  "type": "object"
+}

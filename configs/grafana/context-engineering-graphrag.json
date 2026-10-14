@@ -1,0 +1,86 @@
+{
+  "title": "Context Engineering GraphRAG",
+  "uid": "context-engineering-graphrag",
+  "schemaVersion": 39,
+  "time": {"from": "now-6h", "to": "now"},
+  "templating": {
+    "list": [
+      {"name": "datasource", "type": "datasource", "query": "prometheus"}
+    ]
+  },
+  "panels": [
+    {
+      "id": 1, "type": "stat", "title": "Request success (5m)",
+      "gridPos": {"x": 0, "y": 0, "w": 6, "h": 4},
+      "datasource": {"type": "prometheus", "uid": "${datasource}"},
+      "fieldConfig": {"defaults": {"unit": "percentunit", "decimals": 3}},
+      "targets": [{"expr": "1 - graphrag:request_errors:ratio_5m"}]
+    },
+    {
+      "id": 2, "type": "stat", "title": "Median groundedness (30m)",
+      "gridPos": {"x": 6, "y": 0, "w": 6, "h": 4},
+      "datasource": {"type": "prometheus", "uid": "${datasource}"},
+      "fieldConfig": {"defaults": {"unit": "percentunit", "decimals": 2}},
+      "targets": [{"expr": "histogram_quantile(0.5, sum by (le) (rate(graphrag_answer_groundedness_bucket[30m])))"}]
+    },
+    {
+      "id": 3, "type": "timeseries", "title": "Answers by disposition and mode",
+      "gridPos": {"x": 12, "y": 0, "w": 12, "h": 8},
+      "datasource": {"type": "prometheus", "uid": "${datasource}"},
+      "targets": [{"expr": "sum by (disposition, mode) (rate(graphrag_answers_total[5m]))", "legendFormat": "{{disposition}} {{mode}}"}]
+    },
+    {
+      "id": 4, "type": "timeseries", "title": "p95 latency by route",
+      "gridPos": {"x": 0, "y": 4, "w": 12, "h": 8},
+      "datasource": {"type": "prometheus", "uid": "${datasource}"},
+      "fieldConfig": {"defaults": {"unit": "s"}},
+      "targets": [{"expr": "histogram_quantile(0.95, sum by (le, route) (rate(graphrag_http_request_duration_seconds_bucket[5m])))", "legendFormat": "{{route}}"}]
+    },
+    {
+      "id": 5, "type": "timeseries", "title": "p95 pipeline stage latency",
+      "gridPos": {"x": 12, "y": 8, "w": 12, "h": 8},
+      "datasource": {"type": "prometheus", "uid": "${datasource}"},
+      "fieldConfig": {"defaults": {"unit": "s"}},
+      "targets": [{"expr": "histogram_quantile(0.95, sum by (le, stage) (rate(graphrag_stage_duration_seconds_bucket[5m])))", "legendFormat": "{{stage}}"}]
+    },
+    {
+      "id": 6, "type": "timeseries", "title": "Context tokens per pack (p50 / p95)",
+      "gridPos": {"x": 0, "y": 12, "w": 12, "h": 8},
+      "datasource": {"type": "prometheus", "uid": "${datasource}"},
+      "targets": [
+        {"expr": "histogram_quantile(0.5, sum by (le) (rate(graphrag_context_tokens_bucket[15m])))", "legendFormat": "p50"},
+        {"expr": "histogram_quantile(0.95, sum by (le) (rate(graphrag_context_tokens_bucket[15m])))", "legendFormat": "p95"}
+      ]
+    },
+    {
+      "id": 7, "type": "timeseries", "title": "Ingested and quarantined chunks",
+      "gridPos": {"x": 12, "y": 16, "w": 12, "h": 8},
+      "datasource": {"type": "prometheus", "uid": "${datasource}"},
+      "targets": [
+        {"expr": "sum by (collection) (rate(graphrag_ingested_chunks_total[15m]))", "legendFormat": "ingested {{collection}}"},
+        {"expr": "sum by (collection) (rate(graphrag_quarantined_chunks_total[15m]))", "legendFormat": "quarantined {{collection}}"}
+      ]
+    },
+    {
+      "id": 8, "type": "timeseries", "title": "Authorization decisions",
+      "gridPos": {"x": 0, "y": 20, "w": 12, "h": 8},
+      "datasource": {"type": "prometheus", "uid": "${datasource}"},
+      "targets": [{"expr": "sum by (decision, source) (rate(graphrag_authorization_decisions_total[5m]))", "legendFormat": "{{decision}} ({{source}})"}]
+    },
+    {
+      "id": 9, "type": "timeseries", "title": "MCP and A2A calls by outcome",
+      "gridPos": {"x": 12, "y": 24, "w": 12, "h": 8},
+      "datasource": {"type": "prometheus", "uid": "${datasource}"},
+      "targets": [{"expr": "sum by (protocol, operation, outcome) (rate(graphrag_agent_calls_total[5m]))", "legendFormat": "{{protocol}} {{operation}} {{outcome}}"}]
+    },
+    {
+      "id": 10, "type": "timeseries", "title": "Index reloads and graph builds",
+      "gridPos": {"x": 0, "y": 28, "w": 12, "h": 8},
+      "datasource": {"type": "prometheus", "uid": "${datasource}"},
+      "targets": [
+        {"expr": "sum(rate(graphrag_index_reload_seconds_count[15m]))", "legendFormat": "index reloads/s"},
+        {"expr": "sum by (outcome) (increase(graphrag_graph_builds_total[1h]))", "legendFormat": "graph builds {{outcome}}"}
+      ]
+    }
+  ]
+}

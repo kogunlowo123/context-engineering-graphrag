@@ -1,0 +1,169 @@
+{
+  "$defs": {
+    "ChunkingConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "max_tokens": {
+          "default": 256,
+          "maximum": 2048,
+          "minimum": 32,
+          "title": "Max Tokens",
+          "type": "integer"
+        },
+        "overlap_tokens": {
+          "default": 32,
+          "maximum": 512,
+          "minimum": 0,
+          "title": "Overlap Tokens",
+          "type": "integer"
+        },
+        "strategy": {
+          "$ref": "#/$defs/ChunkingStrategy",
+          "default": "recursive"
+        }
+      },
+      "title": "ChunkingConfig",
+      "type": "object"
+    },
+    "ChunkingStrategy": {
+      "enum": [
+        "fixed",
+        "sentence",
+        "recursive"
+      ],
+      "title": "ChunkingStrategy",
+      "type": "string"
+    },
+    "DataClassification": {
+      "description": "Sensitivity label. Ordered from least to most restricted.",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "title": "DataClassification",
+      "type": "integer"
+    },
+    "TrustLevel": {
+      "description": "Trust assigned to a piece of content based on its origin.\n\nSYSTEM content is authored by the platform operator. VERIFIED content\ncomes from an authenticated, integrity-checked source. USER content is\nsupplied by an authenticated principal. EXTERNAL content (web pages,\nretrieved documents, tool output) is never trusted to carry instructions.",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "title": "TrustLevel",
+      "type": "integer"
+    }
+  },
+  "$id": "https://github.com/kogunlowo123/context-engineering-graphrag/schemas/ingest-document.request.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "chunking": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ChunkingConfig"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "classification": {
+      "$ref": "#/$defs/DataClassification",
+      "default": 1
+    },
+    "document_id": {
+      "title": "Document Id",
+      "type": "string"
+    },
+    "effective_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "When the facts in this version take effect (default: now)",
+      "title": "Effective At"
+    },
+    "expires_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "When the facts stop being valid",
+      "title": "Expires At"
+    },
+    "metadata": {
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "integer"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "boolean"
+          }
+        ]
+      },
+      "title": "Metadata",
+      "type": "object"
+    },
+    "source_type": {
+      "default": "document",
+      "pattern": "^[a-z][a-z0-9_-]{0,63}$",
+      "title": "Source Type",
+      "type": "string"
+    },
+    "source_uri": {
+      "maxLength": 2000,
+      "minLength": 1,
+      "title": "Source Uri",
+      "type": "string"
+    },
+    "text": {
+      "maxLength": 2000000,
+      "minLength": 1,
+      "title": "Text",
+      "type": "string"
+    },
+    "title": {
+      "maxLength": 500,
+      "minLength": 1,
+      "title": "Title",
+      "type": "string"
+    },
+    "trust": {
+      "$ref": "#/$defs/TrustLevel",
+      "default": 0,
+      "description": "Origin trust. SYSTEM is reserved for platform-authored content."
+    }
+  },
+  "required": [
+    "document_id",
+    "title",
+    "text",
+    "source_uri"
+  ],
+  "title": "IngestDocument",
+  "type": "object"
+}

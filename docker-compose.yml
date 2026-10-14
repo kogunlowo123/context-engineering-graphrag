@@ -1,0 +1,73 @@
+# Local development stack: the platform + PostgreSQL with pgvector + an OIDC
+# provider that issues the bearer tokens the local authorizer accepts + an
+# OTel collector. Uses the deterministic hashing embedder and an in-process
+# audit key, so it needs no cloud credentials; never use this configuration
+# outside a developer workstation.
+#
+# Get a token from the mock issuer (scopes become the token's scope claim):
+#   curl -s -X POST localhost:8081/agents/token \
+#     -d grant_type=client_credentials -d client_id=analyst -d client_secret=local \
+#     -d scope="rag:*" | jq -r .access_token
+name: context-engineering-graphrag
+
+services:
+  postgres:
+    image: pgvector/pgvector:0.8.0-pg16
+    environment:
+      POSTGRES_DB: graphrag
+      POSTGRES_USER: graphrag
+      POSTGRES_PASSWORD: graphrag-local-only
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U graphrag -d graphrag"]
+      interval: 5s
+      retries: 10
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  oidc:
+    image: ghcr.io/navikt/mock-oauth2-server:2.1.10
+    environment:
+      SERVER_PORT: "8080"
+      JSON_CONFIG: >
+        {"interactiveLogin": false,
+         "tokenCallbacks": [{"issuerId": "agents",
+           "tokenExpiry": 600,
+           "requestMappings": [{"requestParam": "client_id", "match": "*",
+             "claims": {"sub": "spiffe://agents.local/agent/research/analyst",
+                        "aud": ["context-engineering-graphrag"],
+                        "scope": "rag:*", "max_cls": 3}}]}]}
+    ports:
+      - "8081:8080"
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.111.0
+    command: ["--config=/etc/otelcol/config.yaml"]
+    volumes:
+      - ./deployments/docker/otel-collector.yaml:/etc/otelcol/config.yaml:ro
+
+  graphrag:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+      oidc:
+        condition: service_started
+    ports:
+      - "8080:8080"
+    environment:
+      GRAPHRAG_ENVIRONMENT: development
+      GRAPHRAG_PUBLIC_URL: http://localhost:8080
+      GRAPHRAG_DATABASE_URL: postgresql+asyncpg://graphrag:graphrag-local-only@postgres:5432/graphrag
+      GRAPHRAG_VECTOR_BACKEND: pgvector
+      GRAPHRAG_EMBEDDING_PROVIDER: hashing
+      GRAPHRAG_EMBEDDING_DIMENSION: "384"
+      # Tokens are requested from the host, so their issuer is the host-mapped URL.
+      GRAPHRAG_LOCAL_ISSUER: http://localhost:8081/agents
+      GRAPHRAG_LOCAL_AUDIENCE: context-engineering-graphrag
+      GRAPHRAG_LOCAL_JWKS_URL: http://oidc:8080/agents/jwks
+      GRAPHRAG_AUDIT_LOG_PATH: /var/lib/graphrag/audit/audit.jsonl
+      GRAPHRAG_OTLP_ENDPOINT: http://otel-collector:4317
+      GRAPHRAG_LOG_LEVEL: DEBUG
+
+volumes:
+  pgdata:

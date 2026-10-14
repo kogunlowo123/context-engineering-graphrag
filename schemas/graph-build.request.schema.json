@@ -1,0 +1,31 @@
+{
+  "$id": "https://github.com/kogunlowo123/context-engineering-graphrag/schemas/graph-build.request.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "max_levels": {
+      "default": 4,
+      "maximum": 8,
+      "minimum": 1,
+      "title": "Max Levels",
+      "type": "integer"
+    },
+    "min_community_size": {
+      "default": 2,
+      "maximum": 100,
+      "minimum": 2,
+      "title": "Min Community Size",
+      "type": "integer"
+    },
+    "resolution": {
+      "default": 1.0,
+      "description": "Louvain resolution",
+      "exclusiveMinimum": 0.0,
+      "maximum": 10.0,
+      "title": "Resolution",
+      "type": "number"
+    }
+  },
+  "title": "GraphBuildOptions",
+  "type": "object"
+}

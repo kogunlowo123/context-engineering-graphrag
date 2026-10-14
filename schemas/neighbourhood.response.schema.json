@@ -1,0 +1,154 @@
+{
+  "$defs": {
+    "Entity": {
+      "properties": {
+        "aliases": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Aliases",
+          "type": "array"
+        },
+        "collection": {
+          "title": "Collection",
+          "type": "string"
+        },
+        "entity_id": {
+          "title": "Entity Id",
+          "type": "string"
+        },
+        "entity_type": {
+          "title": "Entity Type",
+          "type": "string"
+        },
+        "mention_count": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Mention Count",
+          "type": "integer"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "normalized": {
+          "title": "Normalized",
+          "type": "string"
+        }
+      },
+      "required": [
+        "entity_id",
+        "collection",
+        "name",
+        "normalized",
+        "entity_type"
+      ],
+      "title": "Entity",
+      "type": "object"
+    },
+    "Relation": {
+      "description": "Assertions with the same endpoints and type aggregated for one point in time.",
+      "properties": {
+        "evidence": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "evidence_chunks": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Chunks",
+          "type": "array"
+        },
+        "relation_type": {
+          "title": "Relation Type",
+          "type": "string"
+        },
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        },
+        "target_id": {
+          "title": "Target Id",
+          "type": "string"
+        },
+        "valid_from": {
+          "format": "date-time",
+          "title": "Valid From",
+          "type": "string"
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Valid To"
+        },
+        "weight": {
+          "title": "Weight",
+          "type": "number"
+        }
+      },
+      "required": [
+        "source_id",
+        "target_id",
+        "relation_type",
+        "weight",
+        "evidence_chunks",
+        "evidence",
+        "valid_from",
+        "valid_to"
+      ],
+      "title": "Relation",
+      "type": "object"
+    }
+  },
+  "$id": "https://github.com/kogunlowo123/context-engineering-graphrag/schemas/neighbourhood.response.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "as_of": {
+      "format": "date-time",
+      "title": "As Of",
+      "type": "string"
+    },
+    "center": {
+      "$ref": "#/$defs/Entity"
+    },
+    "entities": {
+      "items": {
+        "$ref": "#/$defs/Entity"
+      },
+      "title": "Entities",
+      "type": "array"
+    },
+    "hops": {
+      "title": "Hops",
+      "type": "integer"
+    },
+    "relations": {
+      "items": {
+        "$ref": "#/$defs/Relation"
+      },
+      "title": "Relations",
+      "type": "array"
+    }
+  },
+  "required": [
+    "center",
+    "hops",
+    "as_of",
+    "entities",
+    "relations"
+  ],
+  "title": "Neighbourhood",
+  "type": "object"
+}

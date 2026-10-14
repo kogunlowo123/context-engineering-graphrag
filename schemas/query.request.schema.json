@@ -1,0 +1,205 @@
+{
+  "$defs": {
+    "BudgetPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "community_share": {
+          "default": 0.3,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Community Share",
+          "type": "number"
+        },
+        "duplicate_threshold": {
+          "default": 0.7,
+          "exclusiveMinimum": 0.0,
+          "maximum": 1.0,
+          "title": "Duplicate Threshold",
+          "type": "number"
+        },
+        "fact_share": {
+          "default": 0.2,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Fact Share",
+          "type": "number"
+        },
+        "max_tokens": {
+          "default": 3000,
+          "maximum": 200000,
+          "minimum": 200,
+          "title": "Max Tokens",
+          "type": "integer"
+        },
+        "min_fragment_tokens": {
+          "default": 40,
+          "maximum": 1000,
+          "minimum": 8,
+          "title": "Min Fragment Tokens",
+          "type": "integer"
+        },
+        "per_item_tokens": {
+          "default": 320,
+          "maximum": 8000,
+          "minimum": 40,
+          "title": "Per Item Tokens",
+          "type": "integer"
+        }
+      },
+      "title": "BudgetPolicy",
+      "type": "object"
+    },
+    "DataClassification": {
+      "description": "Sensitivity label. Ordered from least to most restricted.",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "title": "DataClassification",
+      "type": "integer"
+    },
+    "RetrievalMode": {
+      "enum": [
+        "auto",
+        "passages",
+        "local",
+        "global"
+      ],
+      "title": "RetrievalMode",
+      "type": "string"
+    }
+  },
+  "$id": "https://github.com/kogunlowo123/context-engineering-graphrag/schemas/query.request.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "as_of": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Answer from documents and graph facts valid at this instant",
+      "title": "As Of"
+    },
+    "budget": {
+      "$ref": "#/$defs/BudgetPolicy"
+    },
+    "community_level": {
+      "anyOf": [
+        {
+          "maximum": 8,
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Community Level"
+    },
+    "document_ids": {
+      "anyOf": [
+        {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 500,
+          "type": "array",
+          "uniqueItems": true
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Document Ids"
+    },
+    "k": {
+      "default": 8,
+      "maximum": 50,
+      "minimum": 1,
+      "title": "K",
+      "type": "integer"
+    },
+    "max_answer_tokens": {
+      "default": 512,
+      "maximum": 8000,
+      "minimum": 32,
+      "title": "Max Answer Tokens",
+      "type": "integer"
+    },
+    "max_classification": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/DataClassification"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "metadata": {
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "integer"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "boolean"
+          }
+        ]
+      },
+      "title": "Metadata",
+      "type": "object"
+    },
+    "mode": {
+      "$ref": "#/$defs/RetrievalMode",
+      "default": "auto"
+    },
+    "purpose_of_use": {
+      "anyOf": [
+        {
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,63}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Purpose Of Use"
+    },
+    "query": {
+      "maxLength": 4000,
+      "minLength": 1,
+      "title": "Query",
+      "type": "string"
+    },
+    "rerank": {
+      "default": true,
+      "title": "Rerank",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "query"
+  ],
+  "title": "QueryRequest",
+  "type": "object"
+}

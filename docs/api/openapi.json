@@ -1,0 +1,3828 @@
+{
+  "components": {
+    "schemas": {
+      "BudgetPolicy": {
+        "additionalProperties": false,
+        "properties": {
+          "community_share": {
+            "default": 0.3,
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Community Share",
+            "type": "number"
+          },
+          "duplicate_threshold": {
+            "default": 0.7,
+            "exclusiveMinimum": 0.0,
+            "maximum": 1.0,
+            "title": "Duplicate Threshold",
+            "type": "number"
+          },
+          "fact_share": {
+            "default": 0.2,
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Fact Share",
+            "type": "number"
+          },
+          "max_tokens": {
+            "default": 3000,
+            "maximum": 200000.0,
+            "minimum": 200.0,
+            "title": "Max Tokens",
+            "type": "integer"
+          },
+          "min_fragment_tokens": {
+            "default": 40,
+            "maximum": 1000.0,
+            "minimum": 8.0,
+            "title": "Min Fragment Tokens",
+            "type": "integer"
+          },
+          "per_item_tokens": {
+            "default": 320,
+            "maximum": 8000.0,
+            "minimum": 40.0,
+            "title": "Per Item Tokens",
+            "type": "integer"
+          }
+        },
+        "title": "BudgetPolicy",
+        "type": "object"
+      },
+      "Chunk": {
+        "properties": {
+          "chunk_id": {
+            "title": "Chunk Id",
+            "type": "string"
+          },
+          "classification": {
+            "$ref": "#/components/schemas/DataClassification"
+          },
+          "collection": {
+            "title": "Collection",
+            "type": "string"
+          },
+          "digest": {
+            "title": "Digest",
+            "type": "string"
+          },
+          "document_id": {
+            "title": "Document Id",
+            "type": "string"
+          },
+          "document_version": {
+            "title": "Document Version",
+            "type": "integer"
+          },
+          "end": {
+            "minimum": 0.0,
+            "title": "End",
+            "type": "integer"
+          },
+          "ordinal": {
+            "minimum": 0.0,
+            "title": "Ordinal",
+            "type": "integer"
+          },
+          "quarantine_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Quarantine Reason"
+          },
+          "quarantined": {
+            "default": false,
+            "title": "Quarantined",
+            "type": "boolean"
+          },
+          "source_uri": {
+            "title": "Source Uri",
+            "type": "string"
+          },
+          "start": {
+            "minimum": 0.0,
+            "title": "Start",
+            "type": "integer"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "token_count": {
+            "minimum": 0.0,
+            "title": "Token Count",
+            "type": "integer"
+          },
+          "trust": {
+            "$ref": "#/components/schemas/TrustLevel"
+          }
+        },
+        "required": [
+          "chunk_id",
+          "collection",
+          "document_id",
+          "document_version",
+          "ordinal",
+          "text",
+          "start",
+          "end",
+          "token_count",
+          "digest",
+          "classification",
+          "trust",
+          "source_uri",
+          "title"
+        ],
+        "title": "Chunk",
+        "type": "object"
+      },
+      "ChunkingConfig": {
+        "additionalProperties": false,
+        "properties": {
+          "max_tokens": {
+            "default": 256,
+            "maximum": 2048.0,
+            "minimum": 32.0,
+            "title": "Max Tokens",
+            "type": "integer"
+          },
+          "overlap_tokens": {
+            "default": 32,
+            "maximum": 512.0,
+            "minimum": 0.0,
+            "title": "Overlap Tokens",
+            "type": "integer"
+          },
+          "strategy": {
+            "$ref": "#/components/schemas/ChunkingStrategy",
+            "default": "recursive"
+          }
+        },
+        "title": "ChunkingConfig",
+        "type": "object"
+      },
+      "ChunkingStrategy": {
+        "enum": [
+          "fixed",
+          "sentence",
+          "recursive"
+        ],
+        "title": "ChunkingStrategy",
+        "type": "string"
+      },
+      "Citation": {
+        "properties": {
+          "chunk_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Chunk Id"
+          },
+          "digest": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Digest"
+          },
+          "document_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Document Id"
+          },
+          "document_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Document Version"
+          },
+          "evidence_chunks": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Evidence Chunks",
+            "type": "array"
+          },
+          "excerpt": {
+            "title": "Excerpt",
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/SourceKind"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "source_uri": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Uri"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "label",
+          "kind",
+          "title",
+          "source_uri",
+          "document_id",
+          "document_version",
+          "chunk_id",
+          "digest",
+          "evidence_chunks",
+          "excerpt"
+        ],
+        "title": "Citation",
+        "type": "object"
+      },
+      "ClaimAssessment": {
+        "properties": {
+          "citations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Citations",
+            "type": "array"
+          },
+          "claim": {
+            "title": "Claim",
+            "type": "string"
+          },
+          "evidence": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Evidence"
+          },
+          "score": {
+            "title": "Score",
+            "type": "number"
+          },
+          "supporting_citations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Supporting Citations",
+            "type": "array"
+          },
+          "verdict": {
+            "$ref": "#/components/schemas/Verdict"
+          }
+        },
+        "required": [
+          "claim",
+          "citations",
+          "verdict",
+          "score",
+          "supporting_citations"
+        ],
+        "title": "ClaimAssessment",
+        "type": "object"
+      },
+      "Collection": {
+        "properties": {
+          "classification": {
+            "$ref": "#/components/schemas/DataClassification"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "description": {
+            "default": "",
+            "maxLength": 2000,
+            "title": "Description",
+            "type": "string"
+          },
+          "embedding_dimension": {
+            "minimum": 1.0,
+            "title": "Embedding Dimension",
+            "type": "integer"
+          },
+          "embedding_model": {
+            "title": "Embedding Model",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "owner": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Owner",
+            "type": "string"
+          },
+          "revision": {
+            "default": 0,
+            "minimum": 0.0,
+            "title": "Revision",
+            "type": "integer"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "classification",
+          "owner",
+          "embedding_model",
+          "embedding_dimension",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "Collection",
+        "type": "object"
+      },
+      "CollectionList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/Collection"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "title": "CollectionList",
+        "type": "object"
+      },
+      "Community": {
+        "properties": {
+          "built_at": {
+            "format": "date-time",
+            "title": "Built At",
+            "type": "string"
+          },
+          "built_revision": {
+            "title": "Built Revision",
+            "type": "integer"
+          },
+          "collection": {
+            "title": "Collection",
+            "type": "string"
+          },
+          "community_id": {
+            "title": "Community Id",
+            "type": "string"
+          },
+          "entity_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Entity Ids",
+            "type": "array"
+          },
+          "key_entities": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Key Entities",
+            "type": "array"
+          },
+          "level": {
+            "minimum": 0.0,
+            "title": "Level",
+            "type": "integer"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          },
+          "weight": {
+            "minimum": 0.0,
+            "title": "Weight",
+            "type": "number"
+          }
+        },
+        "required": [
+          "community_id",
+          "collection",
+          "level",
+          "entity_ids",
+          "key_entities",
+          "summary",
+          "weight",
+          "built_revision",
+          "built_at"
+        ],
+        "title": "Community",
+        "type": "object"
+      },
+      "CommunityList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/Community"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "title": "CommunityList",
+        "type": "object"
+      },
+      "ContextPack": {
+        "properties": {
+          "budget_tokens": {
+            "title": "Budget Tokens",
+            "type": "integer"
+          },
+          "dropped": {
+            "items": {
+              "$ref": "#/components/schemas/DroppedSource"
+            },
+            "title": "Dropped",
+            "type": "array"
+          },
+          "query": {
+            "title": "Query",
+            "type": "string"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/ContextSource"
+            },
+            "title": "Sources",
+            "type": "array"
+          },
+          "used_tokens": {
+            "title": "Used Tokens",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "query",
+          "sources",
+          "dropped",
+          "budget_tokens",
+          "used_tokens"
+        ],
+        "title": "ContextPack",
+        "type": "object"
+      },
+      "ContextRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "as_of": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Answer from documents and graph facts valid at this instant",
+            "title": "As Of"
+          },
+          "budget": {
+            "$ref": "#/components/schemas/BudgetPolicy"
+          },
+          "community_level": {
+            "anyOf": [
+              {
+                "maximum": 8.0,
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Community Level"
+          },
+          "document_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 500,
+                "type": "array",
+                "uniqueItems": true
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Document Ids"
+          },
+          "k": {
+            "default": 8,
+            "maximum": 50.0,
+            "minimum": 1.0,
+            "title": "K",
+            "type": "integer"
+          },
+          "max_classification": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DataClassification"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "metadata": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "boolean"
+                }
+              ]
+            },
+            "title": "Metadata",
+            "type": "object"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/RetrievalMode",
+            "default": "auto"
+          },
+          "purpose_of_use": {
+            "anyOf": [
+              {
+                "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,63}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Purpose Of Use"
+          },
+          "query": {
+            "maxLength": 4000,
+            "minLength": 1,
+            "title": "Query",
+            "type": "string"
+          },
+          "rerank": {
+            "default": true,
+            "title": "Rerank",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "title": "ContextRequest",
+        "type": "object"
+      },
+      "ContextResult": {
+        "properties": {
+          "collection": {
+            "title": "Collection",
+            "type": "string"
+          },
+          "context": {
+            "$ref": "#/components/schemas/ContextPack"
+          },
+          "plan": {
+            "$ref": "#/components/schemas/Plan"
+          },
+          "rendered": {
+            "title": "Rendered",
+            "type": "string"
+          },
+          "trace": {
+            "items": {
+              "$ref": "#/components/schemas/TraceStep"
+            },
+            "title": "Trace",
+            "type": "array"
+          }
+        },
+        "required": [
+          "collection",
+          "plan",
+          "context",
+          "rendered",
+          "trace"
+        ],
+        "title": "ContextResult",
+        "type": "object"
+      },
+      "ContextSource": {
+        "properties": {
+          "chunk_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Chunk Id"
+          },
+          "classification": {
+            "$ref": "#/components/schemas/DataClassification"
+          },
+          "compressed": {
+            "title": "Compressed",
+            "type": "boolean"
+          },
+          "digest": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "sha256 of the full chunk the text came from",
+            "title": "Digest"
+          },
+          "document_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Document Id"
+          },
+          "document_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Document Version"
+          },
+          "evidence_chunks": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Evidence Chunks",
+            "type": "array"
+          },
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/SourceKind"
+          },
+          "score": {
+            "title": "Score",
+            "type": "number"
+          },
+          "source_id": {
+            "description": "Citation label: S<n> passage, F<n> fact, C<n> community",
+            "title": "Source Id",
+            "type": "string"
+          },
+          "source_uri": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Uri"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "tokens": {
+            "title": "Tokens",
+            "type": "integer"
+          },
+          "trust": {
+            "$ref": "#/components/schemas/TrustLevel"
+          }
+        },
+        "required": [
+          "source_id",
+          "kind",
+          "text",
+          "tokens",
+          "score",
+          "compressed",
+          "title",
+          "key",
+          "classification",
+          "trust"
+        ],
+        "title": "ContextSource",
+        "type": "object"
+      },
+      "CreateCollection": {
+        "additionalProperties": false,
+        "properties": {
+          "classification": {
+            "$ref": "#/components/schemas/DataClassification"
+          },
+          "description": {
+            "default": "",
+            "maxLength": 2000,
+            "title": "Description",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "owner": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Owner",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "classification",
+          "owner"
+        ],
+        "title": "CreateCollection",
+        "type": "object"
+      },
+      "DataClassification": {
+        "description": "Sensitivity label. Ordered from least to most restricted.",
+        "enum": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "title": "DataClassification",
+        "type": "integer"
+      },
+      "Decision": {
+        "description": "Outcome of a policy or security evaluation.",
+        "enum": [
+          "allow",
+          "deny",
+          "require_approval"
+        ],
+        "title": "Decision",
+        "type": "string"
+      },
+      "Disposition": {
+        "enum": [
+          "answered",
+          "abstained",
+          "withheld",
+          "pending_approval"
+        ],
+        "title": "Disposition",
+        "type": "string"
+      },
+      "Document": {
+        "properties": {
+          "chunk_count": {
+            "minimum": 0.0,
+            "title": "Chunk Count",
+            "type": "integer"
+          },
+          "classification": {
+            "$ref": "#/components/schemas/DataClassification"
+          },
+          "collection": {
+            "title": "Collection",
+            "type": "string"
+          },
+          "digest": {
+            "title": "Digest",
+            "type": "string"
+          },
+          "document_id": {
+            "title": "Document Id",
+            "type": "string"
+          },
+          "effective_at": {
+            "format": "date-time",
+            "title": "Effective At",
+            "type": "string"
+          },
+          "expires_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expires At"
+          },
+          "ingested_at": {
+            "format": "date-time",
+            "title": "Ingested At",
+            "type": "string"
+          },
+          "ingested_by": {
+            "title": "Ingested By",
+            "type": "string"
+          },
+          "metadata": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "boolean"
+                }
+              ]
+            },
+            "title": "Metadata",
+            "type": "object"
+          },
+          "source_type": {
+            "title": "Source Type",
+            "type": "string"
+          },
+          "source_uri": {
+            "title": "Source Uri",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "trust": {
+            "$ref": "#/components/schemas/TrustLevel"
+          },
+          "version": {
+            "minimum": 1.0,
+            "title": "Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "collection",
+          "document_id",
+          "version",
+          "title",
+          "source_uri",
+          "source_type",
+          "classification",
+          "trust",
+          "digest",
+          "effective_at",
+          "ingested_at",
+          "ingested_by",
+          "chunk_count"
+        ],
+        "title": "Document",
+        "type": "object"
+      },
+      "DocumentList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/Document"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "limit",
+          "offset"
+        ],
+        "title": "DocumentList",
+        "type": "object"
+      },
+      "DocumentView": {
+        "properties": {
+          "chunks": {
+            "items": {
+              "$ref": "#/components/schemas/Chunk"
+            },
+            "title": "Chunks",
+            "type": "array"
+          },
+          "document": {
+            "$ref": "#/components/schemas/Document"
+          }
+        },
+        "required": [
+          "document",
+          "chunks"
+        ],
+        "title": "DocumentView",
+        "type": "object"
+      },
+      "DroppedSource": {
+        "properties": {
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/SourceKind"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "kind",
+          "reason"
+        ],
+        "title": "DroppedSource",
+        "type": "object"
+      },
+      "Entity": {
+        "properties": {
+          "aliases": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Aliases",
+            "type": "array"
+          },
+          "collection": {
+            "title": "Collection",
+            "type": "string"
+          },
+          "entity_id": {
+            "title": "Entity Id",
+            "type": "string"
+          },
+          "entity_type": {
+            "title": "Entity Type",
+            "type": "string"
+          },
+          "mention_count": {
+            "default": 0,
+            "minimum": 0.0,
+            "title": "Mention Count",
+            "type": "integer"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "normalized": {
+            "title": "Normalized",
+            "type": "string"
+          }
+        },
+        "required": [
+          "entity_id",
+          "collection",
+          "name",
+          "normalized",
+          "entity_type"
+        ],
+        "title": "Entity",
+        "type": "object"
+      },
+      "EntityList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/Entity"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "title": "EntityList",
+        "type": "object"
+      },
+      "ErasureReport": {
+        "properties": {
+          "assertions": {
+            "title": "Assertions",
+            "type": "integer"
+          },
+          "chunks": {
+            "title": "Chunks",
+            "type": "integer"
+          },
+          "communities": {
+            "title": "Communities",
+            "type": "integer"
+          },
+          "entities": {
+            "title": "Entities",
+            "type": "integer"
+          },
+          "mentions": {
+            "title": "Mentions",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "chunks",
+          "mentions",
+          "assertions",
+          "entities",
+          "communities"
+        ],
+        "title": "ErasureReport",
+        "type": "object"
+      },
+      "GoldenQuery": {
+        "additionalProperties": false,
+        "properties": {
+          "query": {
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Query",
+            "type": "string"
+          },
+          "relevant_documents": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 100,
+            "minItems": 1,
+            "title": "Relevant Documents",
+            "type": "array",
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "query",
+          "relevant_documents"
+        ],
+        "title": "GoldenQuery",
+        "type": "object"
+      },
+      "GraphBuildOptions": {
+        "additionalProperties": false,
+        "properties": {
+          "max_levels": {
+            "default": 4,
+            "maximum": 8.0,
+            "minimum": 1.0,
+            "title": "Max Levels",
+            "type": "integer"
+          },
+          "min_community_size": {
+            "default": 2,
+            "maximum": 100.0,
+            "minimum": 2.0,
+            "title": "Min Community Size",
+            "type": "integer"
+          },
+          "resolution": {
+            "default": 1.0,
+            "description": "Louvain resolution",
+            "exclusiveMinimum": 0.0,
+            "maximum": 10.0,
+            "title": "Resolution",
+            "type": "number"
+          }
+        },
+        "title": "GraphBuildOptions",
+        "type": "object"
+      },
+      "GraphBuildReport": {
+        "properties": {
+          "collection": {
+            "title": "Collection",
+            "type": "string"
+          },
+          "communities": {
+            "title": "Communities",
+            "type": "integer"
+          },
+          "duration_ms": {
+            "title": "Duration Ms",
+            "type": "number"
+          },
+          "entities": {
+            "title": "Entities",
+            "type": "integer"
+          },
+          "levels": {
+            "items": {
+              "$ref": "#/components/schemas/LevelReport"
+            },
+            "title": "Levels",
+            "type": "array"
+          },
+          "merged_entities": {
+            "title": "Merged Entities",
+            "type": "integer"
+          },
+          "relations": {
+            "title": "Relations",
+            "type": "integer"
+          },
+          "summarizer": {
+            "title": "Summarizer",
+            "type": "string"
+          }
+        },
+        "required": [
+          "collection",
+          "merged_entities",
+          "entities",
+          "relations",
+          "levels",
+          "communities",
+          "summarizer",
+          "duration_ms"
+        ],
+        "title": "GraphBuildReport",
+        "type": "object"
+      },
+      "GroundednessReport": {
+        "properties": {
+          "citation_coverage": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Citation Coverage",
+            "type": "number"
+          },
+          "citation_precision": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Citation Precision",
+            "type": "number"
+          },
+          "claims": {
+            "items": {
+              "$ref": "#/components/schemas/ClaimAssessment"
+            },
+            "title": "Claims",
+            "type": "array"
+          },
+          "contradicted_claims": {
+            "title": "Contradicted Claims",
+            "type": "integer"
+          },
+          "groundedness": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Groundedness",
+            "type": "number"
+          },
+          "judge": {
+            "title": "Judge",
+            "type": "string"
+          },
+          "unsupported_claims": {
+            "title": "Unsupported Claims",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "groundedness",
+          "citation_precision",
+          "citation_coverage",
+          "claims",
+          "unsupported_claims",
+          "contradicted_claims",
+          "judge"
+        ],
+        "title": "GroundednessReport",
+        "type": "object"
+      },
+      "GroundednessRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "answer": {
+            "maxLength": 20000,
+            "minLength": 1,
+            "title": "Answer",
+            "type": "string"
+          },
+          "sources": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Citation label (S1, F1, C1...) -> source text",
+            "maxProperties": 100,
+            "minProperties": 1,
+            "title": "Sources",
+            "type": "object"
+          }
+        },
+        "required": [
+          "answer",
+          "sources"
+        ],
+        "title": "GroundednessRequest",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "IngestDocument": {
+        "additionalProperties": false,
+        "properties": {
+          "chunking": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ChunkingConfig"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "classification": {
+            "$ref": "#/components/schemas/DataClassification",
+            "default": 1
+          },
+          "document_id": {
+            "title": "Document Id",
+            "type": "string"
+          },
+          "effective_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "When the facts in this version take effect (default: now)",
+            "title": "Effective At"
+          },
+          "expires_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "When the facts stop being valid",
+            "title": "Expires At"
+          },
+          "metadata": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "boolean"
+                }
+              ]
+            },
+            "title": "Metadata",
+            "type": "object"
+          },
+          "source_type": {
+            "default": "document",
+            "pattern": "^[a-z][a-z0-9_-]{0,63}$",
+            "title": "Source Type",
+            "type": "string"
+          },
+          "source_uri": {
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Source Uri",
+            "type": "string"
+          },
+          "text": {
+            "maxLength": 2000000,
+            "minLength": 1,
+            "title": "Text",
+            "type": "string"
+          },
+          "title": {
+            "maxLength": 500,
+            "minLength": 1,
+            "title": "Title",
+            "type": "string"
+          },
+          "trust": {
+            "$ref": "#/components/schemas/TrustLevel",
+            "default": 0,
+            "description": "Origin trust. SYSTEM is reserved for platform-authored content."
+          }
+        },
+        "required": [
+          "document_id",
+          "title",
+          "text",
+          "source_uri"
+        ],
+        "title": "IngestDocument",
+        "type": "object"
+      },
+      "IngestResult": {
+        "properties": {
+          "assertions": {
+            "title": "Assertions",
+            "type": "integer"
+          },
+          "chunks": {
+            "title": "Chunks",
+            "type": "integer"
+          },
+          "collection": {
+            "title": "Collection",
+            "type": "string"
+          },
+          "digest": {
+            "title": "Digest",
+            "type": "string"
+          },
+          "document_id": {
+            "title": "Document Id",
+            "type": "string"
+          },
+          "entities_created": {
+            "title": "Entities Created",
+            "type": "integer"
+          },
+          "mentions": {
+            "title": "Mentions",
+            "type": "integer"
+          },
+          "quarantined_chunks": {
+            "title": "Quarantined Chunks",
+            "type": "integer"
+          },
+          "redacted_secrets": {
+            "title": "Redacted Secrets",
+            "type": "integer"
+          },
+          "status": {
+            "description": "created, updated or unchanged",
+            "title": "Status",
+            "type": "string"
+          },
+          "version": {
+            "title": "Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "collection",
+          "document_id",
+          "version",
+          "digest",
+          "status",
+          "chunks",
+          "quarantined_chunks",
+          "redacted_secrets",
+          "entities_created",
+          "mentions",
+          "assertions"
+        ],
+        "title": "IngestResult",
+        "type": "object"
+      },
+      "LevelReport": {
+        "properties": {
+          "communities": {
+            "title": "Communities",
+            "type": "integer"
+          },
+          "level": {
+            "title": "Level",
+            "type": "integer"
+          },
+          "modularity": {
+            "title": "Modularity",
+            "type": "number"
+          }
+        },
+        "required": [
+          "level",
+          "communities",
+          "modularity"
+        ],
+        "title": "LevelReport",
+        "type": "object"
+      },
+      "Neighbourhood": {
+        "properties": {
+          "as_of": {
+            "format": "date-time",
+            "title": "As Of",
+            "type": "string"
+          },
+          "center": {
+            "$ref": "#/components/schemas/Entity"
+          },
+          "entities": {
+            "items": {
+              "$ref": "#/components/schemas/Entity"
+            },
+            "title": "Entities",
+            "type": "array"
+          },
+          "hops": {
+            "title": "Hops",
+            "type": "integer"
+          },
+          "relations": {
+            "items": {
+              "$ref": "#/components/schemas/Relation"
+            },
+            "title": "Relations",
+            "type": "array"
+          }
+        },
+        "required": [
+          "center",
+          "hops",
+          "as_of",
+          "entities",
+          "relations"
+        ],
+        "title": "Neighbourhood",
+        "type": "object"
+      },
+      "Plan": {
+        "properties": {
+          "linked_entities": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Linked Entities",
+            "type": "array"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/RetrievalMode"
+          },
+          "rationale": {
+            "title": "Rationale",
+            "type": "string"
+          },
+          "rounds": {
+            "title": "Rounds",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "mode",
+          "rationale",
+          "linked_entities",
+          "rounds"
+        ],
+        "title": "Plan",
+        "type": "object"
+      },
+      "QueryMetrics": {
+        "properties": {
+          "ndcg": {
+            "title": "Ndcg",
+            "type": "number"
+          },
+          "precision": {
+            "title": "Precision",
+            "type": "number"
+          },
+          "query": {
+            "title": "Query",
+            "type": "string"
+          },
+          "recall": {
+            "title": "Recall",
+            "type": "number"
+          },
+          "reciprocal_rank": {
+            "title": "Reciprocal Rank",
+            "type": "number"
+          },
+          "retrieved_documents": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Retrieved Documents",
+            "type": "array"
+          }
+        },
+        "required": [
+          "query",
+          "retrieved_documents",
+          "recall",
+          "precision",
+          "reciprocal_rank",
+          "ndcg"
+        ],
+        "title": "QueryMetrics",
+        "type": "object"
+      },
+      "QueryRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "as_of": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Answer from documents and graph facts valid at this instant",
+            "title": "As Of"
+          },
+          "budget": {
+            "$ref": "#/components/schemas/BudgetPolicy"
+          },
+          "community_level": {
+            "anyOf": [
+              {
+                "maximum": 8.0,
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Community Level"
+          },
+          "document_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 500,
+                "type": "array",
+                "uniqueItems": true
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Document Ids"
+          },
+          "k": {
+            "default": 8,
+            "maximum": 50.0,
+            "minimum": 1.0,
+            "title": "K",
+            "type": "integer"
+          },
+          "max_answer_tokens": {
+            "default": 512,
+            "maximum": 8000.0,
+            "minimum": 32.0,
+            "title": "Max Answer Tokens",
+            "type": "integer"
+          },
+          "max_classification": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DataClassification"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "metadata": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "boolean"
+                }
+              ]
+            },
+            "title": "Metadata",
+            "type": "object"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/RetrievalMode",
+            "default": "auto"
+          },
+          "purpose_of_use": {
+            "anyOf": [
+              {
+                "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,63}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Purpose Of Use"
+          },
+          "query": {
+            "maxLength": 4000,
+            "minLength": 1,
+            "title": "Query",
+            "type": "string"
+          },
+          "rerank": {
+            "default": true,
+            "title": "Rerank",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "title": "QueryRequest",
+        "type": "object"
+      },
+      "QueryResult": {
+        "properties": {
+          "answer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Released answer; null unless disposition is answered/abstained",
+            "title": "Answer"
+          },
+          "citations": {
+            "items": {
+              "$ref": "#/components/schemas/Citation"
+            },
+            "title": "Citations",
+            "type": "array"
+          },
+          "collection": {
+            "title": "Collection",
+            "type": "string"
+          },
+          "context_budget": {
+            "title": "Context Budget",
+            "type": "integer"
+          },
+          "context_tokens": {
+            "title": "Context Tokens",
+            "type": "integer"
+          },
+          "disposition": {
+            "$ref": "#/components/schemas/Disposition"
+          },
+          "dropped_sources": {
+            "title": "Dropped Sources",
+            "type": "integer"
+          },
+          "generator": {
+            "title": "Generator",
+            "type": "string"
+          },
+          "groundedness": {
+            "$ref": "#/components/schemas/GroundednessReport"
+          },
+          "plan": {
+            "$ref": "#/components/schemas/Plan"
+          },
+          "release": {
+            "$ref": "#/components/schemas/ReleaseDecision"
+          },
+          "sources": {
+            "title": "Sources",
+            "type": "integer"
+          },
+          "trace": {
+            "items": {
+              "$ref": "#/components/schemas/TraceStep"
+            },
+            "title": "Trace",
+            "type": "array"
+          }
+        },
+        "required": [
+          "collection",
+          "disposition",
+          "answer",
+          "citations",
+          "groundedness",
+          "release",
+          "plan",
+          "generator",
+          "context_tokens",
+          "context_budget",
+          "sources",
+          "dropped_sources",
+          "trace"
+        ],
+        "title": "QueryResult",
+        "type": "object"
+      },
+      "Relation": {
+        "description": "Assertions with the same endpoints and type aggregated for one point in time.",
+        "properties": {
+          "evidence": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Evidence",
+            "type": "array"
+          },
+          "evidence_chunks": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Evidence Chunks",
+            "type": "array"
+          },
+          "relation_type": {
+            "title": "Relation Type",
+            "type": "string"
+          },
+          "source_id": {
+            "title": "Source Id",
+            "type": "string"
+          },
+          "target_id": {
+            "title": "Target Id",
+            "type": "string"
+          },
+          "valid_from": {
+            "format": "date-time",
+            "title": "Valid From",
+            "type": "string"
+          },
+          "valid_to": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Valid To"
+          },
+          "weight": {
+            "title": "Weight",
+            "type": "number"
+          }
+        },
+        "required": [
+          "source_id",
+          "target_id",
+          "relation_type",
+          "weight",
+          "evidence_chunks",
+          "evidence",
+          "valid_from",
+          "valid_to"
+        ],
+        "title": "Relation",
+        "type": "object"
+      },
+      "ReleaseDecision": {
+        "properties": {
+          "decision": {
+            "$ref": "#/components/schemas/Decision"
+          },
+          "matched_rules": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Matched Rules",
+            "type": "array"
+          },
+          "policy_digest": {
+            "title": "Policy Digest",
+            "type": "string"
+          },
+          "policy_version": {
+            "title": "Policy Version",
+            "type": "string"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          }
+        },
+        "required": [
+          "decision",
+          "matched_rules",
+          "policy_version",
+          "policy_digest",
+          "reason"
+        ],
+        "title": "ReleaseDecision",
+        "type": "object"
+      },
+      "RetrievalEvaluationRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "k": {
+            "default": 10,
+            "maximum": 100.0,
+            "minimum": 1.0,
+            "title": "K",
+            "type": "integer"
+          },
+          "queries": {
+            "items": {
+              "$ref": "#/components/schemas/GoldenQuery"
+            },
+            "maxItems": 200,
+            "minItems": 1,
+            "title": "Queries",
+            "type": "array"
+          },
+          "rerank": {
+            "default": true,
+            "title": "Rerank",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "queries"
+        ],
+        "title": "RetrievalEvaluationRequest",
+        "type": "object"
+      },
+      "RetrievalMode": {
+        "enum": [
+          "auto",
+          "passages",
+          "local",
+          "global"
+        ],
+        "title": "RetrievalMode",
+        "type": "string"
+      },
+      "RetrievalReport": {
+        "properties": {
+          "k": {
+            "title": "K",
+            "type": "integer"
+          },
+          "mean_ndcg": {
+            "title": "Mean Ndcg",
+            "type": "number"
+          },
+          "mean_precision": {
+            "title": "Mean Precision",
+            "type": "number"
+          },
+          "mean_recall": {
+            "title": "Mean Recall",
+            "type": "number"
+          },
+          "mrr": {
+            "title": "Mrr",
+            "type": "number"
+          },
+          "queries": {
+            "items": {
+              "$ref": "#/components/schemas/QueryMetrics"
+            },
+            "title": "Queries",
+            "type": "array"
+          }
+        },
+        "required": [
+          "k",
+          "queries",
+          "mean_recall",
+          "mean_precision",
+          "mrr",
+          "mean_ndcg"
+        ],
+        "title": "RetrievalReport",
+        "type": "object"
+      },
+      "SearchHit": {
+        "properties": {
+          "bm25": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bm25"
+          },
+          "bm25_rank": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bm25 Rank"
+          },
+          "chunk": {
+            "$ref": "#/components/schemas/Chunk"
+          },
+          "dense": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dense"
+          },
+          "dense_rank": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dense Rank"
+          },
+          "fused": {
+            "title": "Fused",
+            "type": "number"
+          },
+          "rerank": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rerank"
+          },
+          "score": {
+            "title": "Score",
+            "type": "number"
+          }
+        },
+        "required": [
+          "chunk",
+          "score",
+          "bm25",
+          "bm25_rank",
+          "dense",
+          "dense_rank",
+          "fused",
+          "rerank"
+        ],
+        "title": "SearchHit",
+        "type": "object"
+      },
+      "SearchRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "as_of": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "As Of"
+          },
+          "candidates": {
+            "default": 50,
+            "maximum": 500.0,
+            "minimum": 1.0,
+            "title": "Candidates",
+            "type": "integer"
+          },
+          "diversify": {
+            "default": true,
+            "title": "Diversify",
+            "type": "boolean"
+          },
+          "document_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 500,
+                "type": "array",
+                "uniqueItems": true
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Document Ids"
+          },
+          "k": {
+            "default": 8,
+            "maximum": 100.0,
+            "minimum": 1.0,
+            "title": "K",
+            "type": "integer"
+          },
+          "max_classification": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DataClassification"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "metadata": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "boolean"
+                }
+              ]
+            },
+            "title": "Metadata",
+            "type": "object"
+          },
+          "mmr_lambda": {
+            "default": 0.7,
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Mmr Lambda",
+            "type": "number"
+          },
+          "purpose_of_use": {
+            "anyOf": [
+              {
+                "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,63}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Purpose Of Use"
+          },
+          "query": {
+            "maxLength": 4000,
+            "minLength": 1,
+            "title": "Query",
+            "type": "string"
+          },
+          "rerank": {
+            "default": true,
+            "title": "Rerank",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "title": "SearchRequest",
+        "type": "object"
+      },
+      "SearchResult": {
+        "properties": {
+          "collection": {
+            "title": "Collection",
+            "type": "string"
+          },
+          "embedding_model": {
+            "title": "Embedding Model",
+            "type": "string"
+          },
+          "hits": {
+            "items": {
+              "$ref": "#/components/schemas/SearchHit"
+            },
+            "title": "Hits",
+            "type": "array"
+          },
+          "reranker": {
+            "title": "Reranker",
+            "type": "string"
+          },
+          "revision": {
+            "title": "Revision",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "collection",
+          "revision",
+          "hits",
+          "reranker",
+          "embedding_model"
+        ],
+        "title": "SearchResult",
+        "type": "object"
+      },
+      "SourceKind": {
+        "enum": [
+          "passage",
+          "fact",
+          "community"
+        ],
+        "title": "SourceKind",
+        "type": "string"
+      },
+      "TraceStep": {
+        "properties": {
+          "detail": {
+            "additionalProperties": true,
+            "title": "Detail",
+            "type": "object"
+          },
+          "duration_ms": {
+            "title": "Duration Ms",
+            "type": "number"
+          },
+          "step": {
+            "title": "Step",
+            "type": "string"
+          }
+        },
+        "required": [
+          "step",
+          "duration_ms"
+        ],
+        "title": "TraceStep",
+        "type": "object"
+      },
+      "TrustLevel": {
+        "description": "Trust assigned to a piece of content based on its origin.\n\nSYSTEM content is authored by the platform operator. VERIFIED content\ncomes from an authenticated, integrity-checked source. USER content is\nsupplied by an authenticated principal. EXTERNAL content (web pages,\nretrieved documents, tool output) is never trusted to carry instructions.",
+        "enum": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "title": "TrustLevel",
+        "type": "integer"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      },
+      "Verdict": {
+        "enum": [
+          "supported",
+          "partial",
+          "contradicted",
+          "unsupported"
+        ],
+        "title": "Verdict",
+        "type": "string"
+      }
+    }
+  },
+  "info": {
+    "description": "Agentic RAG and GraphRAG context engineering: ingestion with provenance, hybrid retrieval, temporal knowledge graph, community search, reranking, token budgeting, attributed answers and groundedness-gated release.",
+    "title": "Context Engineering GraphRAG",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/.well-known/agent-card.json": {
+      "get": {
+        "operationId": "card__well_known_agent_card_json_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Card  Well Known Agent Card Json Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Card",
+        "tags": [
+          "a2a"
+        ]
+      }
+    },
+    "/a2a": {
+      "post": {
+        "description": "JSON-RPC 2.0 endpoint; supports ``message/send``.",
+        "operationId": "jsonrpc_a2a_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Jsonrpc",
+        "tags": [
+          "a2a"
+        ]
+      }
+    },
+    "/v1/collections": {
+      "get": {
+        "operationId": "list_collections_v1_collections_get",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-purpose-of-use",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 64,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Purpose-Of-Use"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CollectionList"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Collections",
+        "tags": [
+          "collections"
+        ]
+      },
+      "post": {
+        "operationId": "create_collection_v1_collections_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-purpose-of-use",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 64,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Purpose-Of-Use"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCollection"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Collection"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Collection",
+        "tags": [
+          "collections"
+        ]
+      }
+    },
+    "/v1/collections/{collection}": {
+      "get": {
+        "operationId": "get_collection_v1_collections__collection__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "required": true,
+            "schema": {
+              "pattern": "^[a-z0-9][a-z0-9-]{1,62}$",
+              "title": "Collection",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-purpose-of-use",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 64,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Purpose-Of-Use"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Collection"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Collection",
+        "tags": [
+          "collections"
+        ]
+      }
+    },
+    "/v1/collections/{collection}/communities": {
+      "get": {
+        "operationId": "communities_v1_collections__collection__communities_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "required": true,
+            "schema": {
+              "pattern": "^[a-z0-9][a-z0-9-]{1,62}$",
+              "title": "Collection",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "level",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maximum": 8,
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Level"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-purpose-of-use",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 64,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Purpose-Of-Use"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommunityList"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Communities",
+        "tags": [
+          "graph"
+        ]
+      }
+    },
+    "/v1/collections/{collection}/context": {
+      "post": {
+        "description": "Budgeted, attributed context pack for an external agent's own model call.",
+        "operationId": "build_context_v1_collections__collection__context_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "required": true,
+            "schema": {
+              "pattern": "^[a-z0-9][a-z0-9-]{1,62}$",
+              "title": "Collection",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-purpose-of-use",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 64,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Purpose-Of-Use"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContextRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContextResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Build Context",
+        "tags": [
+          "retrieval"
+        ]
+      }
+    },
+    "/v1/collections/{collection}/documents": {
+      "get": {
+        "operationId": "list_documents_v1_collections__collection__documents_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "required": true,
+            "schema": {
+              "pattern": "^[a-z0-9][a-z0-9-]{1,62}$",
+              "title": "Collection",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "maximum": 1000000,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-purpose-of-use",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 64,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Purpose-Of-Use"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentList"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Documents",
+        "tags": [
+          "documents"
+        ]
+      },
+      "post": {
+        "operationId": "ingest_v1_collections__collection__documents_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "required": true,
+            "schema": {
+              "pattern": "^[a-z0-9][a-z0-9-]{1,62}$",
+              "title": "Collection",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-purpose-of-use",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 64,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Purpose-Of-Use"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IngestDocument"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IngestResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Ingest",
+        "tags": [
+          "documents"
+        ]
+      }
+    },
+    "/v1/collections/{collection}/documents/{document_id}": {
+      "delete": {
+        "description": "Right-to-erasure: removes the document, its chunks, vectors, mentions, assertions,\norphaned entities and every community summary of the collection.",
+        "operationId": "erase_document_v1_collections__collection__documents__document_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "required": true,
+            "schema": {
+              "pattern": "^[a-z0-9][a-z0-9-]{1,62}$",
+              "title": "Collection",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "document_id",
+            "required": true,
+            "schema": {
+              "maxLength": 200,
+              "minLength": 1,
+              "title": "Document Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-purpose-of-use",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 64,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Purpose-Of-Use"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErasureReport"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Erase Document",
+        "tags": [
+          "documents"
+        ]
+      },
+      "get": {
+        "operationId": "get_document_v1_collections__collection__documents__document_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "required": true,
+            "schema": {
+              "pattern": "^[a-z0-9][a-z0-9-]{1,62}$",
+              "title": "Collection",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "document_id",
+            "required": true,
+            "schema": {
+              "maxLength": 200,
+              "minLength": 1,
+              "title": "Document Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-purpose-of-use",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 64,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Purpose-Of-Use"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Document",
+        "tags": [
+          "documents"
+        ]
+      }
+    },
+    "/v1/collections/{collection}/entities": {
+      "get": {
+        "operationId": "entities_v1_collections__collection__entities_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "required": true,
+            "schema": {
+              "pattern": "^[a-z0-9][a-z0-9-]{1,62}$",
+              "title": "Collection",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 200,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Q"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 500,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-purpose-of-use",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 64,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Purpose-Of-Use"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityList"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Entities",
+        "tags": [
+          "graph"
+        ]
+      }
+    },
+    "/v1/collections/{collection}/entities/{entity_id}/neighbourhood": {
+      "get": {
+        "operationId": "neighbourhood_v1_collections__collection__entities__entity_id__neighbourhood_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "required": true,
+            "schema": {
+              "pattern": "^[a-z0-9][a-z0-9-]{1,62}$",
+              "title": "Collection",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "entity_id",
+            "required": true,
+            "schema": {
+              "pattern": "^ent_[0-9a-f]{32}$",
+              "title": "Entity Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "hops",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "maximum": 3,
+              "minimum": 1,
+              "title": "Hops",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "as_of",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "As Of"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-purpose-of-use",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 64,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Purpose-Of-Use"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Neighbourhood"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Neighbourhood",
+        "tags": [
+          "graph"
+        ]
+      }
+    },
+    "/v1/collections/{collection}/evaluations/retrieval": {
+      "post": {
+        "operationId": "evaluate_retrieval_v1_collections__collection__evaluations_retrieval_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "required": true,
+            "schema": {
+              "pattern": "^[a-z0-9][a-z0-9-]{1,62}$",
+              "title": "Collection",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-purpose-of-use",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 64,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Purpose-Of-Use"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RetrievalEvaluationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetrievalReport"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Evaluate Retrieval",
+        "tags": [
+          "evaluation"
+        ]
+      }
+    },
+    "/v1/collections/{collection}/graph/build": {
+      "post": {
+        "operationId": "build_graph_v1_collections__collection__graph_build_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "required": true,
+            "schema": {
+              "pattern": "^[a-z0-9][a-z0-9-]{1,62}$",
+              "title": "Collection",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-purpose-of-use",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 64,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Purpose-Of-Use"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/GraphBuildOptions"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GraphBuildReport"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Build Graph",
+        "tags": [
+          "graph"
+        ]
+      }
+    },
+    "/v1/collections/{collection}/query": {
+      "post": {
+        "description": "Agentic RAG: plan, retrieve, budget, answer with citations, check groundedness,\nand release the answer only if the governance policy allows it.",
+        "operationId": "query_v1_collections__collection__query_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "required": true,
+            "schema": {
+              "pattern": "^[a-z0-9][a-z0-9-]{1,62}$",
+              "title": "Collection",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-purpose-of-use",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 64,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Purpose-Of-Use"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QueryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Query",
+        "tags": [
+          "retrieval"
+        ]
+      }
+    },
+    "/v1/collections/{collection}/search": {
+      "post": {
+        "operationId": "search_v1_collections__collection__search_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "required": true,
+            "schema": {
+              "pattern": "^[a-z0-9][a-z0-9-]{1,62}$",
+              "title": "Collection",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-purpose-of-use",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 64,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Purpose-Of-Use"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Search",
+        "tags": [
+          "retrieval"
+        ]
+      }
+    },
+    "/v1/evaluations/groundedness": {
+      "post": {
+        "operationId": "evaluate_groundedness_v1_evaluations_groundedness_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-purpose-of-use",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 64,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Purpose-Of-Use"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GroundednessRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroundednessReport"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Evaluate Groundedness",
+        "tags": [
+          "evaluation"
+        ]
+      }
+    }
+  }
+}

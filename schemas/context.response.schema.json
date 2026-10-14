@@ -1,0 +1,318 @@
+{
+  "$defs": {
+    "ContextPack": {
+      "properties": {
+        "budget_tokens": {
+          "title": "Budget Tokens",
+          "type": "integer"
+        },
+        "dropped": {
+          "items": {
+            "$ref": "#/$defs/DroppedSource"
+          },
+          "title": "Dropped",
+          "type": "array"
+        },
+        "query": {
+          "title": "Query",
+          "type": "string"
+        },
+        "sources": {
+          "items": {
+            "$ref": "#/$defs/ContextSource"
+          },
+          "title": "Sources",
+          "type": "array"
+        },
+        "used_tokens": {
+          "title": "Used Tokens",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "query",
+        "sources",
+        "dropped",
+        "budget_tokens",
+        "used_tokens"
+      ],
+      "title": "ContextPack",
+      "type": "object"
+    },
+    "ContextSource": {
+      "properties": {
+        "chunk_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Chunk Id"
+        },
+        "classification": {
+          "$ref": "#/$defs/DataClassification"
+        },
+        "compressed": {
+          "title": "Compressed",
+          "type": "boolean"
+        },
+        "digest": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "sha256 of the full chunk the text came from",
+          "title": "Digest"
+        },
+        "document_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Document Id"
+        },
+        "document_version": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Document Version"
+        },
+        "evidence_chunks": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Chunks",
+          "type": "array"
+        },
+        "key": {
+          "title": "Key",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/SourceKind"
+        },
+        "score": {
+          "title": "Score",
+          "type": "number"
+        },
+        "source_id": {
+          "description": "Citation label: S<n> passage, F<n> fact, C<n> community",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "source_uri": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Uri"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "tokens": {
+          "title": "Tokens",
+          "type": "integer"
+        },
+        "trust": {
+          "$ref": "#/$defs/TrustLevel"
+        }
+      },
+      "required": [
+        "source_id",
+        "kind",
+        "text",
+        "tokens",
+        "score",
+        "compressed",
+        "title",
+        "key",
+        "classification",
+        "trust"
+      ],
+      "title": "ContextSource",
+      "type": "object"
+    },
+    "DataClassification": {
+      "description": "Sensitivity label. Ordered from least to most restricted.",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "title": "DataClassification",
+      "type": "integer"
+    },
+    "DroppedSource": {
+      "properties": {
+        "key": {
+          "title": "Key",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/SourceKind"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "key",
+        "kind",
+        "reason"
+      ],
+      "title": "DroppedSource",
+      "type": "object"
+    },
+    "Plan": {
+      "properties": {
+        "linked_entities": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Linked Entities",
+          "type": "array"
+        },
+        "mode": {
+          "$ref": "#/$defs/RetrievalMode"
+        },
+        "rationale": {
+          "title": "Rationale",
+          "type": "string"
+        },
+        "rounds": {
+          "title": "Rounds",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "mode",
+        "rationale",
+        "linked_entities",
+        "rounds"
+      ],
+      "title": "Plan",
+      "type": "object"
+    },
+    "RetrievalMode": {
+      "enum": [
+        "auto",
+        "passages",
+        "local",
+        "global"
+      ],
+      "title": "RetrievalMode",
+      "type": "string"
+    },
+    "SourceKind": {
+      "enum": [
+        "passage",
+        "fact",
+        "community"
+      ],
+      "title": "SourceKind",
+      "type": "string"
+    },
+    "TraceStep": {
+      "properties": {
+        "detail": {
+          "additionalProperties": true,
+          "title": "Detail",
+          "type": "object"
+        },
+        "duration_ms": {
+          "title": "Duration Ms",
+          "type": "number"
+        },
+        "step": {
+          "title": "Step",
+          "type": "string"
+        }
+      },
+      "required": [
+        "step",
+        "duration_ms"
+      ],
+      "title": "TraceStep",
+      "type": "object"
+    },
+    "TrustLevel": {
+      "description": "Trust assigned to a piece of content based on its origin.\n\nSYSTEM content is authored by the platform operator. VERIFIED content\ncomes from an authenticated, integrity-checked source. USER content is\nsupplied by an authenticated principal. EXTERNAL content (web pages,\nretrieved documents, tool output) is never trusted to carry instructions.",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "title": "TrustLevel",
+      "type": "integer"
+    }
+  },
+  "$id": "https://github.com/kogunlowo123/context-engineering-graphrag/schemas/context.response.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "collection": {
+      "title": "Collection",
+      "type": "string"
+    },
+    "context": {
+      "$ref": "#/$defs/ContextPack"
+    },
+    "plan": {
+      "$ref": "#/$defs/Plan"
+    },
+    "rendered": {
+      "title": "Rendered",
+      "type": "string"
+    },
+    "trace": {
+      "items": {
+        "$ref": "#/$defs/TraceStep"
+      },
+      "title": "Trace",
+      "type": "array"
+    }
+  },
+  "required": [
+    "collection",
+    "plan",
+    "context",
+    "rendered",
+    "trace"
+  ],
+  "title": "ContextResult",
+  "type": "object"
+}

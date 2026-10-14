@@ -1,0 +1,106 @@
+# Context governance policy (agentic-core PolicyEngine).
+# Combining: deny overrides, then require_approval, then allow; default deny.
+#
+# Two decision families share this file:
+#
+# 1. Access (action rag:*, resource type collection/evaluation). Evaluated
+#    locally only when GRAPHRAG_IDENTITY_FABRIC_URL is not set; with a fabric,
+#    the fabric's policy decides access. Subject attributes come from the
+#    verified bearer token: status, scopes, max_classification,
+#    delegation_depth, delegated, action_in_scope (true when the action
+#    matches a token scope such as rag:query or rag:*).
+#
+# 2. Answer release (action answer:release, resource type answer), always
+#    evaluated here after generation. Resource attributes: groundedness
+#    (0..1), unsupported_claims, contradicted_claims, citations, abstained,
+#    invalid_citations. Resource classification is the highest
+#    classification among the sources placed in context.
+#
+# risk: 1=LOW 2=MODERATE 3=HIGH 4=CRITICAL
+# classification: 0=PUBLIC 1=INTERNAL 2=CONFIDENTIAL 3=RESTRICTED
+name: context-governance
+version: "2026.10.0"
+rules:
+  # ------------------------------------------------------------ access
+  - id: deny-restricted-without-purpose
+    description: Reading restricted collections requires a declared purpose of use.
+    effect: deny
+    actions: ["rag:search", "rag:query", "rag:context", "rag:document.read", "rag:graph.read"]
+    resource_types: ["collection"]
+    conditions:
+      - {attribute: resource.classification, operator: gte, value: 3}
+      - {attribute: environment.purpose_of_use, operator: exists, value: false}
+
+  - id: deny-deep-delegation-on-restricted
+    description: Restricted collections may be reached through at most one delegation hop.
+    effect: deny
+    actions: ["rag:*"]
+    resource_types: ["collection"]
+    conditions:
+      - {attribute: resource.classification, operator: gte, value: 3}
+      - {attribute: subject.delegation_depth, operator: gt, value: 1}
+
+  - id: approve-delegated-erasure
+    description: An agent acting on someone else's behalf may not erase documents without sign-off.
+    effect: require_approval
+    actions: ["rag:document.delete"]
+    conditions:
+      - {attribute: subject.delegated, operator: eq, value: true}
+
+  - id: approve-critical-risk-callers
+    description: Any access by a critical-risk agent needs human approval.
+    effect: require_approval
+    actions: ["rag:*"]
+    conditions:
+      - {attribute: risk, operator: gte, value: 4}
+
+  - id: allow-scoped-access
+    description: Access is allowed when the credential carries the action as a scope.
+    effect: allow
+    actions: ["rag:*"]
+    conditions:
+      - {attribute: subject.status, operator: eq, value: active}
+      - {attribute: subject.action_in_scope, operator: eq, value: true}
+
+  # ---------------------------------------------------- answer release
+  - id: deny-contradicted-answer
+    description: Never release an answer that contradicts its own cited evidence.
+    effect: deny
+    actions: ["answer:release"]
+    resource_types: ["answer"]
+    conditions:
+      - {attribute: resource.abstained, operator: eq, value: false}
+      - {attribute: resource.contradicted_claims, operator: gt, value: 0}
+
+  - id: deny-ungrounded-answer
+    description: Answers with groundedness below 0.5 are withheld.
+    effect: deny
+    actions: ["answer:release"]
+    resource_types: ["answer"]
+    conditions:
+      - {attribute: resource.abstained, operator: eq, value: false}
+      - {attribute: resource.groundedness, operator: lt, value: 0.5}
+
+  - id: deny-fabricated-citations
+    description: Answers that cited sources not present in the context are withheld.
+    effect: deny
+    actions: ["answer:release"]
+    resource_types: ["answer"]
+    conditions:
+      - {attribute: resource.invalid_citations, operator: gt, value: 0}
+
+  - id: approve-restricted-weak-grounding
+    description: Restricted-source answers below 0.8 groundedness need a reviewer.
+    effect: require_approval
+    actions: ["answer:release"]
+    resource_types: ["answer"]
+    conditions:
+      - {attribute: resource.classification, operator: gte, value: 3}
+      - {attribute: resource.abstained, operator: eq, value: false}
+      - {attribute: resource.groundedness, operator: lt, value: 0.8}
+
+  - id: allow-answer-release
+    description: Grounded answers and abstentions are released.
+    effect: allow
+    actions: ["answer:release"]
+    resource_types: ["answer"]

@@ -1,0 +1,29 @@
+{
+  "$id": "https://github.com/kogunlowo123/context-engineering-graphrag/schemas/groundedness.request.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "answer": {
+      "maxLength": 20000,
+      "minLength": 1,
+      "title": "Answer",
+      "type": "string"
+    },
+    "sources": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Citation label (S1, F1, C1...) -> source text",
+      "maxProperties": 100,
+      "minProperties": 1,
+      "title": "Sources",
+      "type": "object"
+    }
+  },
+  "required": [
+    "answer",
+    "sources"
+  ],
+  "title": "GroundednessRequest",
+  "type": "object"
+}

@@ -1,0 +1,50 @@
+{{- $g := .Values.graphrag -}}
+{{- $fullname := include "graphrag.fullname" . -}}
+{{- if and (eq $g.embedding.provider "bedrock") (not $g.embedding.awsRegion) }}{{ fail "graphrag.embedding.awsRegion is required for provider=bedrock" }}{{ end -}}
+{{- if and (eq $g.embedding.provider "openai_compatible") (not $g.embedding.baseUrl) }}{{ fail "graphrag.embedding.baseUrl is required for provider=openai_compatible" }}{{ end -}}
+{{- if and (eq $g.reranker.kind "http") (not $g.reranker.url) }}{{ fail "graphrag.reranker.url is required for kind=http" }}{{ end -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $fullname }}
+  labels: {{- include "graphrag.labels" . | nindent 4 }}
+data:
+  GRAPHRAG_ENVIRONMENT: {{ $g.environment | quote }}
+  GRAPHRAG_PUBLIC_URL: {{ required "graphrag.publicUrl is required" $g.publicUrl | quote }}
+  GRAPHRAG_ADDITIONAL_HOSTS: {{ list (printf "%s.%s.svc:%v" $fullname .Release.Namespace .Values.service.port) (printf "%s.%s.svc.cluster.local:%v" $fullname .Release.Namespace .Values.service.port) (printf "%s:%v" $fullname .Values.service.port) | toJson | quote }}
+  GRAPHRAG_IDENTITY_FABRIC_URL: {{ required "graphrag.identityFabricUrl is required" $g.identityFabricUrl | quote }}
+  GRAPHRAG_VECTOR_BACKEND: {{ $g.vectorBackend | quote }}
+  GRAPHRAG_EMBEDDING_PROVIDER: {{ $g.embedding.provider | quote }}
+  GRAPHRAG_EMBEDDING_MODEL: {{ $g.embedding.model | quote }}
+  GRAPHRAG_EMBEDDING_DIMENSION: {{ $g.embedding.dimension | quote }}
+  GRAPHRAG_EMBEDDING_AUTH: {{ $g.embedding.auth | quote }}
+  {{- with $g.embedding.awsRegion }}
+  GRAPHRAG_AWS_REGION: {{ . | quote }}
+  {{- end }}
+  {{- with $g.embedding.baseUrl }}
+  GRAPHRAG_EMBEDDING_BASE_URL: {{ . | quote }}
+  {{- end }}
+  {{- with $g.embedding.apiKeyEnv }}
+  GRAPHRAG_EMBEDDING_API_KEY_ENV: {{ . | quote }}
+  {{- end }}
+  GRAPHRAG_RERANKER: {{ $g.reranker.kind | quote }}
+  GRAPHRAG_RERANKER_MODEL: {{ $g.reranker.model | quote }}
+  {{- with $g.reranker.url }}
+  GRAPHRAG_RERANKER_URL: {{ . | quote }}
+  {{- end }}
+  GRAPHRAG_GENERATOR: {{ $g.generator | quote }}
+  GRAPHRAG_EXTRACTOR: {{ $g.extractor | quote }}
+  GRAPHRAG_SUMMARIZER: {{ $g.summarizer | quote }}
+  GRAPHRAG_JUDGE: {{ $g.judge | quote }}
+  {{- if include "graphrag.usesModels" . }}
+  GRAPHRAG_PROVIDERS_FILE: /app/configs/providers.yaml
+  {{- end }}
+  GRAPHRAG_CHUNK_STRATEGY: {{ $g.chunking.strategy | quote }}
+  GRAPHRAG_CHUNK_MAX_TOKENS: {{ $g.chunking.maxTokens | quote }}
+  GRAPHRAG_CHUNK_OVERLAP_TOKENS: {{ $g.chunking.overlapTokens | quote }}
+  GRAPHRAG_RESOLUTION_THRESHOLD: {{ $g.resolutionThreshold | quote }}
+  GRAPHRAG_AUDIT_KEY_FILE: {{ printf "/etc/graphrag/audit-key/%s" (required "secrets.auditKeyFile is required" .Values.secrets.auditKeyFile) | quote }}
+  GRAPHRAG_LOG_LEVEL: {{ $g.logLevel | quote }}
+  {{- with $g.otlpEndpoint }}
+  GRAPHRAG_OTLP_ENDPOINT: {{ . | quote }}
+  {{- end }}

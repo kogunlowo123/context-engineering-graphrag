@@ -1,0 +1,241 @@
+{
+  "$defs": {
+    "Chunk": {
+      "properties": {
+        "chunk_id": {
+          "title": "Chunk Id",
+          "type": "string"
+        },
+        "classification": {
+          "$ref": "#/$defs/DataClassification"
+        },
+        "collection": {
+          "title": "Collection",
+          "type": "string"
+        },
+        "digest": {
+          "title": "Digest",
+          "type": "string"
+        },
+        "document_id": {
+          "title": "Document Id",
+          "type": "string"
+        },
+        "document_version": {
+          "title": "Document Version",
+          "type": "integer"
+        },
+        "end": {
+          "minimum": 0,
+          "title": "End",
+          "type": "integer"
+        },
+        "ordinal": {
+          "minimum": 0,
+          "title": "Ordinal",
+          "type": "integer"
+        },
+        "quarantine_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Quarantine Reason"
+        },
+        "quarantined": {
+          "default": false,
+          "title": "Quarantined",
+          "type": "boolean"
+        },
+        "source_uri": {
+          "title": "Source Uri",
+          "type": "string"
+        },
+        "start": {
+          "minimum": 0,
+          "title": "Start",
+          "type": "integer"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "token_count": {
+          "minimum": 0,
+          "title": "Token Count",
+          "type": "integer"
+        },
+        "trust": {
+          "$ref": "#/$defs/TrustLevel"
+        }
+      },
+      "required": [
+        "chunk_id",
+        "collection",
+        "document_id",
+        "document_version",
+        "ordinal",
+        "text",
+        "start",
+        "end",
+        "token_count",
+        "digest",
+        "classification",
+        "trust",
+        "source_uri",
+        "title"
+      ],
+      "title": "Chunk",
+      "type": "object"
+    },
+    "DataClassification": {
+      "description": "Sensitivity label. Ordered from least to most restricted.",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "title": "DataClassification",
+      "type": "integer"
+    },
+    "SearchHit": {
+      "properties": {
+        "bm25": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Bm25"
+        },
+        "bm25_rank": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Bm25 Rank"
+        },
+        "chunk": {
+          "$ref": "#/$defs/Chunk"
+        },
+        "dense": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Dense"
+        },
+        "dense_rank": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Dense Rank"
+        },
+        "fused": {
+          "title": "Fused",
+          "type": "number"
+        },
+        "rerank": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Rerank"
+        },
+        "score": {
+          "title": "Score",
+          "type": "number"
+        }
+      },
+      "required": [
+        "chunk",
+        "score",
+        "bm25",
+        "bm25_rank",
+        "dense",
+        "dense_rank",
+        "fused",
+        "rerank"
+      ],
+      "title": "SearchHit",
+      "type": "object"
+    },
+    "TrustLevel": {
+      "description": "Trust assigned to a piece of content based on its origin.\n\nSYSTEM content is authored by the platform operator. VERIFIED content\ncomes from an authenticated, integrity-checked source. USER content is\nsupplied by an authenticated principal. EXTERNAL content (web pages,\nretrieved documents, tool output) is never trusted to carry instructions.",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "title": "TrustLevel",
+      "type": "integer"
+    }
+  },
+  "$id": "https://github.com/kogunlowo123/context-engineering-graphrag/schemas/search.response.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "collection": {
+      "title": "Collection",
+      "type": "string"
+    },
+    "embedding_model": {
+      "title": "Embedding Model",
+      "type": "string"
+    },
+    "hits": {
+      "items": {
+        "$ref": "#/$defs/SearchHit"
+      },
+      "title": "Hits",
+      "type": "array"
+    },
+    "reranker": {
+      "title": "Reranker",
+      "type": "string"
+    },
+    "revision": {
+      "title": "Revision",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "collection",
+    "revision",
+    "hits",
+    "reranker",
+    "embedding_model"
+  ],
+  "title": "SearchResult",
+  "type": "object"
+}

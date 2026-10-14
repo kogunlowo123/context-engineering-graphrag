@@ -1,0 +1,66 @@
+{
+  "$id": "https://github.com/kogunlowo123/context-engineering-graphrag/schemas/ingest-document.response.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "assertions": {
+      "title": "Assertions",
+      "type": "integer"
+    },
+    "chunks": {
+      "title": "Chunks",
+      "type": "integer"
+    },
+    "collection": {
+      "title": "Collection",
+      "type": "string"
+    },
+    "digest": {
+      "title": "Digest",
+      "type": "string"
+    },
+    "document_id": {
+      "title": "Document Id",
+      "type": "string"
+    },
+    "entities_created": {
+      "title": "Entities Created",
+      "type": "integer"
+    },
+    "mentions": {
+      "title": "Mentions",
+      "type": "integer"
+    },
+    "quarantined_chunks": {
+      "title": "Quarantined Chunks",
+      "type": "integer"
+    },
+    "redacted_secrets": {
+      "title": "Redacted Secrets",
+      "type": "integer"
+    },
+    "status": {
+      "description": "created, updated or unchanged",
+      "title": "Status",
+      "type": "string"
+    },
+    "version": {
+      "title": "Version",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "collection",
+    "document_id",
+    "version",
+    "digest",
+    "status",
+    "chunks",
+    "quarantined_chunks",
+    "redacted_secrets",
+    "entities_created",
+    "mentions",
+    "assertions"
+  ],
+  "title": "IngestResult",
+  "type": "object"
+}

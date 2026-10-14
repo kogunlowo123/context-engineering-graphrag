@@ -1,0 +1,421 @@
+{
+  "$defs": {
+    "Citation": {
+      "properties": {
+        "chunk_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Chunk Id"
+        },
+        "digest": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Digest"
+        },
+        "document_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Document Id"
+        },
+        "document_version": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Document Version"
+        },
+        "evidence_chunks": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Chunks",
+          "type": "array"
+        },
+        "excerpt": {
+          "title": "Excerpt",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/SourceKind"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "source_uri": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Source Uri"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "kind",
+        "title",
+        "source_uri",
+        "document_id",
+        "document_version",
+        "chunk_id",
+        "digest",
+        "evidence_chunks",
+        "excerpt"
+      ],
+      "title": "Citation",
+      "type": "object"
+    },
+    "ClaimAssessment": {
+      "properties": {
+        "citations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Citations",
+          "type": "array"
+        },
+        "claim": {
+          "title": "Claim",
+          "type": "string"
+        },
+        "evidence": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence"
+        },
+        "score": {
+          "title": "Score",
+          "type": "number"
+        },
+        "supporting_citations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Supporting Citations",
+          "type": "array"
+        },
+        "verdict": {
+          "$ref": "#/$defs/Verdict"
+        }
+      },
+      "required": [
+        "claim",
+        "citations",
+        "verdict",
+        "score",
+        "supporting_citations"
+      ],
+      "title": "ClaimAssessment",
+      "type": "object"
+    },
+    "Decision": {
+      "description": "Outcome of a policy or security evaluation.",
+      "enum": [
+        "allow",
+        "deny",
+        "require_approval"
+      ],
+      "title": "Decision",
+      "type": "string"
+    },
+    "Disposition": {
+      "enum": [
+        "answered",
+        "abstained",
+        "withheld",
+        "pending_approval"
+      ],
+      "title": "Disposition",
+      "type": "string"
+    },
+    "GroundednessReport": {
+      "properties": {
+        "citation_coverage": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Citation Coverage",
+          "type": "number"
+        },
+        "citation_precision": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Citation Precision",
+          "type": "number"
+        },
+        "claims": {
+          "items": {
+            "$ref": "#/$defs/ClaimAssessment"
+          },
+          "title": "Claims",
+          "type": "array"
+        },
+        "contradicted_claims": {
+          "title": "Contradicted Claims",
+          "type": "integer"
+        },
+        "groundedness": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Groundedness",
+          "type": "number"
+        },
+        "judge": {
+          "title": "Judge",
+          "type": "string"
+        },
+        "unsupported_claims": {
+          "title": "Unsupported Claims",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "groundedness",
+        "citation_precision",
+        "citation_coverage",
+        "claims",
+        "unsupported_claims",
+        "contradicted_claims",
+        "judge"
+      ],
+      "title": "GroundednessReport",
+      "type": "object"
+    },
+    "Plan": {
+      "properties": {
+        "linked_entities": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Linked Entities",
+          "type": "array"
+        },
+        "mode": {
+          "$ref": "#/$defs/RetrievalMode"
+        },
+        "rationale": {
+          "title": "Rationale",
+          "type": "string"
+        },
+        "rounds": {
+          "title": "Rounds",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "mode",
+        "rationale",
+        "linked_entities",
+        "rounds"
+      ],
+      "title": "Plan",
+      "type": "object"
+    },
+    "ReleaseDecision": {
+      "properties": {
+        "decision": {
+          "$ref": "#/$defs/Decision"
+        },
+        "matched_rules": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Matched Rules",
+          "type": "array"
+        },
+        "policy_digest": {
+          "title": "Policy Digest",
+          "type": "string"
+        },
+        "policy_version": {
+          "title": "Policy Version",
+          "type": "string"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "decision",
+        "matched_rules",
+        "policy_version",
+        "policy_digest",
+        "reason"
+      ],
+      "title": "ReleaseDecision",
+      "type": "object"
+    },
+    "RetrievalMode": {
+      "enum": [
+        "auto",
+        "passages",
+        "local",
+        "global"
+      ],
+      "title": "RetrievalMode",
+      "type": "string"
+    },
+    "SourceKind": {
+      "enum": [
+        "passage",
+        "fact",
+        "community"
+      ],
+      "title": "SourceKind",
+      "type": "string"
+    },
+    "TraceStep": {
+      "properties": {
+        "detail": {
+          "additionalProperties": true,
+          "title": "Detail",
+          "type": "object"
+        },
+        "duration_ms": {
+          "title": "Duration Ms",
+          "type": "number"
+        },
+        "step": {
+          "title": "Step",
+          "type": "string"
+        }
+      },
+      "required": [
+        "step",
+        "duration_ms"
+      ],
+      "title": "TraceStep",
+      "type": "object"
+    },
+    "Verdict": {
+      "enum": [
+        "supported",
+        "partial",
+        "contradicted",
+        "unsupported"
+      ],
+      "title": "Verdict",
+      "type": "string"
+    }
+  },
+  "$id": "https://github.com/kogunlowo123/context-engineering-graphrag/schemas/query.response.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "answer": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Released answer; null unless disposition is answered/abstained",
+      "title": "Answer"
+    },
+    "citations": {
+      "items": {
+        "$ref": "#/$defs/Citation"
+      },
+      "title": "Citations",
+      "type": "array"
+    },
+    "collection": {
+      "title": "Collection",
+      "type": "string"
+    },
+    "context_budget": {
+      "title": "Context Budget",
+      "type": "integer"
+    },
+    "context_tokens": {
+      "title": "Context Tokens",
+      "type": "integer"
+    },
+    "disposition": {
+      "$ref": "#/$defs/Disposition"
+    },
+    "dropped_sources": {
+      "title": "Dropped Sources",
+      "type": "integer"
+    },
+    "generator": {
+      "title": "Generator",
+      "type": "string"
+    },
+    "groundedness": {
+      "$ref": "#/$defs/GroundednessReport"
+    },
+    "plan": {
+      "$ref": "#/$defs/Plan"
+    },
+    "release": {
+      "$ref": "#/$defs/ReleaseDecision"
+    },
+    "sources": {
+      "title": "Sources",
+      "type": "integer"
+    },
+    "trace": {
+      "items": {
+        "$ref": "#/$defs/TraceStep"
+      },
+      "title": "Trace",
+      "type": "array"
+    }
+  },
+  "required": [
+    "collection",
+    "disposition",
+    "answer",
+    "citations",
+    "groundedness",
+    "release",
+    "plan",
+    "generator",
+    "context_tokens",
+    "context_budget",
+    "sources",
+    "dropped_sources",
+    "trace"
+  ],
+  "title": "QueryResult",
+  "type": "object"
+}

@@ -1,0 +1,62 @@
+{
+  "$defs": {
+    "GoldenQuery": {
+      "additionalProperties": false,
+      "properties": {
+        "query": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Query",
+          "type": "string"
+        },
+        "relevant_documents": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 100,
+          "minItems": 1,
+          "title": "Relevant Documents",
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "query",
+        "relevant_documents"
+      ],
+      "title": "GoldenQuery",
+      "type": "object"
+    }
+  },
+  "$id": "https://github.com/kogunlowo123/context-engineering-graphrag/schemas/retrieval-evaluation.request.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "k": {
+      "default": 10,
+      "maximum": 100,
+      "minimum": 1,
+      "title": "K",
+      "type": "integer"
+    },
+    "queries": {
+      "items": {
+        "$ref": "#/$defs/GoldenQuery"
+      },
+      "maxItems": 200,
+      "minItems": 1,
+      "title": "Queries",
+      "type": "array"
+    },
+    "rerank": {
+      "default": true,
+      "title": "Rerank",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "queries"
+  ],
+  "title": "RetrievalEvaluationRequest",
+  "type": "object"
+}
